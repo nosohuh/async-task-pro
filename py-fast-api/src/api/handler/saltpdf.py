@@ -1,26 +1,29 @@
-from fastapi import FastAPI, HTTPException
+import io
+import google.generativeai as genai
 from services.redis import get_redis_connection
+from db.db import get_db_connection
+from fastapi import UploadFile, HTTPException
 
-app = FastAPI()
-
-redis_client = get_redis_connection()
-
-@app.post("/set/{key}")
-def set_value(key: str, value: str):
+async def process_salt_pdf(file: UploadFile):
     try:
-        redis_client.set(key, value)
-        return {"message": f"{key} Redis'e kaydedildi."}
+        # Redis
+        redis_client = get_redis_connection()
+        # DB
+        db_conn = get_db_connection()
+        # Belleğe Al
+        file_content = await file.read()
+        doc_data = io.BytesIO(file_content)
+        # PDF Gönder
+        sample_doc = genai.upload_file(data=doc_data, mime_type='application/pdf')
+        # AI'den İçerik Al
+        prompt = "Summarize this document"
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content([sample_doc, prompt])
+        # Redis de sakla
+        redis_client.set(file.filename, response.text)
+        print("AI yanıtı Redis'e kaydedildi.")
+        # Yant Dön
+        return {"filename": file.filename, "summary": response.text}
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Redis hatası: {e}")
-
-@app.get("/get/{key}")
-def get_value(key: str):
-    value = redis_client.get(key)
-    if value is None:
-        raise HTTPException(status_code=404, detail=f"{key} bulunamadı.")
-    return {"key": key, "value": value.decode()}
-
-@app.on_event("shutdown")
-def shutdown_event():
-    redis_client.close()
-    print('*Redis-Close*')
+        raise HTTPException(status_code=500, detail=f"Hata oluştu: {e}")

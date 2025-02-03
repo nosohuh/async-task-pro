@@ -2,12 +2,17 @@ from fastapi import FastAPI
 from db.db import get_db_connection, get_import_db_table
 from services.redis import get_redis_connection
 from api.routes import pdf_router  
+import google.generativeai as genai
+import os
+
 
 app = FastAPI(
     title="PDF Upload API",
     version="0.1.0",
     description="Veritabanı ve Redis bağlantılı FastAPI uygulaması"
 )
+# Genie Api
+genai.configure(api_key=os.getenv('GEMİNİ_API_KEY'))
 
 # db ve reds connect
 db_conn = get_db_connection()
