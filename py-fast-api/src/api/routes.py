@@ -1,6 +1,6 @@
 # api/routes.py
 from fastapi import APIRouter, UploadFile, File, Form
-from src.api.handler.pdf import upload_pdf  
+from src.api.handler.pdf import upload_pdf
 
 app = APIRouter()
 
