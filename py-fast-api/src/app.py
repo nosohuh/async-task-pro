@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 from db.db import get_db_connection, get_import_db_table
 from services.redis import get_redis_connection
-from api.routes import pdf_router  
+from api.routes import app as router  
 import google.generativeai as genai
 import os
+from dotenv import load_dotenv
 
+
+# Load env variables
+load_dotenv()
 
 app = FastAPI(
     title="PDF Upload API",
@@ -12,14 +16,25 @@ app = FastAPI(
     description="Veritabanı ve Redis bağlantılı FastAPI uygulaması"
 )
 # Genie Api
-genai.configure(api_key=os.getenv('GEMİNİ_API_KEY'))
+gemini = os.getenv("GEMINI_API_KEY")
+if not gemini:
+    raise ValueError("API anahtarı bulunamadı. Lütfen .env dosyasını kontrol edin.")
+genai.configure(api_key=gemini)
 
-# db ve reds connect
-db_conn = get_db_connection()
-redis_conn = get_redis_connection()
+
+
+# db ve redis bağlantıları
+db_conn = None
+redis_conn = None
+try:
+    db_conn = get_db_connection()
+    redis_conn = get_redis_connection()
+except Exception as e:
+    print(f"Bağlantı hatası: {e}")
+
 
 # Router
-app.include_router(pdf_router)
+app.include_router(router)
 
 # Root endpoint
 @app.get("/")

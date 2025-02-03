@@ -4,3 +4,6 @@ uvicorn
 python-dotenv
 redis
 google-generativeai
+langchain-google-genai
+PyPDF2
+streamlit
