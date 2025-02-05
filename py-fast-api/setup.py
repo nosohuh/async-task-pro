@@ -19,7 +19,7 @@ setup(
         "types-redis",
     ],
     author="İdris Aladağ",
-    author_email="aladag2345@gmail.com",
+    author_email="-",
     description="-",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
