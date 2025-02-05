@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: FAST-APİ-PDF-AI Docs.
+  version: 1.1.0
+paths:
+  /pdf/:
+    post:
+      summary: Upload PDF file and prompt
+      operationId: uploadPdf
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The PDF file to be uploaded
+                prompt:
+                  type: string
+                  description: A prompt for the PDF processing
+      responses:
+        '200':
+          description: Successful PDF upload and processing
+        '400':
+          description: Bad request
+
+  /chat/:
+    post:
+      summary: Start a chat with the provided file and user input
+      operationId: startChat
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to be uploaded for the chat
+                user_input:
+                  type: string
+                  description: User input for the chat
+      responses:
+        '200':
+          description: Successful chat start
+        '400':
+          description: Bad request
+
+  /end-chat/:
+    post:
+      summary: End the chat with the uploaded file
+      operationId: endChat
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file associated with the chat session
+      responses:
+        '200':
+          description: Chat ended successfully
+        '400':
+          description: Bad request
