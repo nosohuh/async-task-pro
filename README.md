@@ -1,6 +1,5 @@
-# async-task-pro
 # Video Example
 
-You can watch the video below:
+You can watch the video by clicking the link below:
 
-[![Watch the video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+[Watch the video](https://github.com/nosohuh/async-task-pro/blob/main/2025-02-05%2010-34-30.mkv)
