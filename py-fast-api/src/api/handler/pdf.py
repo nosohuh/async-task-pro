@@ -58,9 +58,15 @@ async def continue_chat(file: UploadFile, user_input: str):
             status_code=404,
             detail=message.get("pdf", "file_not_found").format(file.filename),
         )
-    file_path = file_path.decode("utf-8")
+    # Eğer file_path bytes türünde ise, utf-8 olarak decode et
+    file_path = file_path.decode("utf-8") if isinstance(file_path, bytes) else file_path
+    # Redis'ten chat_history'yi al, yoksa boş string olarak başlat
     chat_history = redis_connection.get(f"chat_history_{file.filename}")
-    chat_history = chat_history.decode("utf-8") if chat_history else ""
+    chat_history = (
+        chat_history.decode("utf-8")
+        if isinstance(chat_history, bytes)
+        else chat_history or ""
+    )
     # Sohbeti biriktir
     chat_history += f"User: {user_input}\n"
     try:
@@ -76,29 +82,34 @@ async def continue_chat(file: UploadFile, user_input: str):
         )
 
 
-# Sohbeti ve dosya temizliği db kayıt
 async def end_chat(file: UploadFile):
     file_name = file.filename
     file_path = os.path.join(UPLOAD_DIR, file_name)
     # Redis'ten sohbet geçmişini al
     chat_history = redis_connection.get(f"chat_history_{file_name}")
-    chat_history = chat_history.decode("utf-8") if chat_history else ""
+    # Redis'ten gelen değer bytes ise decode et, değilse olduğu gibi kullan
+    if chat_history:
+        chat_history = (
+            chat_history.decode("utf-8")
+            if isinstance(chat_history, bytes)
+            else chat_history
+        )
+    else:
+        chat_history = ""
     if not chat_history:
         raise HTTPException(
             status_code=400, detail=message.get("pdf", "chat_history_not_found")
         )
     try:
-        # Dosyayı sil
         if os.path.exists(file_path):
             os.remove(file_path)
-            print(f"file {file_name} delete.")
+            print(f"file {file_name} deleted.")
         else:
             print(f"{file_name} file not found.")
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Dosya silinirken hata oluştu: {str(e)}"
         )
-    # Redis'ten ilgili kayıtları sil
     if redis_connection:
         redis_connection.delete(file_name)
         redis_connection.delete(f"chat_history_{file_name}")
@@ -107,11 +118,11 @@ async def end_chat(file: UploadFile):
         conn = get_db_connection()
         if conn:
             log_ai_activity(
-                conn, file_name, "PDF", "gemini-1.5-flash", "UserIP", chat_history
-            )
+                conn, file_name, "PDF", 
+                "gemini-1.5-flash", 
+                "UserIP", chat_history)
         else:
             raise HTTPException(status_code=500, detail="Db connection failed.")
-
         return {"message": message.get("pdf", "chat_ended")}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Err logging activity: {str(e)}")
