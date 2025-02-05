@@ -1,0 +1,16 @@
+{
+    "fastapi": {
+      "title": "PDF Upload API",
+      "version": "0.1.0",
+      "description": "FastAPI application with database and Redis connection"
+    },
+    "pdf": {
+      "default_prompt": "How many pages are in this file?",
+      "user_input_required": "User input is required to continue the chat.",
+      "file_not_found": "File not found in Redis. Please upload the file first.",
+      "chat_history_not_found": "Chat history is empty.",
+      "chat_ended": "Records associated with chat and file {file_name} have been cleared and chat history has been saved."
+    }
+    
+  }
+  

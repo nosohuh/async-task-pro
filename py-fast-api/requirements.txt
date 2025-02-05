@@ -5,5 +5,8 @@ python-dotenv
 redis
 google-generativeai
 langchain-google-genai
-PyPDF2
-streamlit
+flake8
+black
+mypy
+pre-commit
+types-redis
