@@ -35,3 +35,10 @@ This system allows users to upload PDF files, ask questions about their contents
 # Video Example
 https://github.com/user-attachments/assets/819bfd9e-0a67-4fa8-b24b-2de4194ab944
 
+# Video Example 2
+
+https://github.com/user-attachments/assets/1f37f003-7a28-4046-bb99-116cc5c18632
+
+
+
+
