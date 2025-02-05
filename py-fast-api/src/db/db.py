@@ -1,6 +1,6 @@
-import psycopg2
-from dotenv import load_dotenv
-import os
+import psycopg2  # type: ignore
+from dotenv import load_dotenv  # type: ignore
+import os  # type: ignore
 from .log_model import (
     create_ai_activity_table,
 )

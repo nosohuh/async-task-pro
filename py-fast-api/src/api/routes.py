@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, Form
-from src.api.handler.pdf import upload_pdf, continue_chat, end_chat
+from api.handler.pdf import upload_pdf, continue_chat, end_chat
 
 app = APIRouter()
 

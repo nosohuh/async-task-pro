@@ -1,9 +1,9 @@
-import json
-import os
+import json  # type: ignore
+import os  # type: ignore
 
 
 class MessageLoader:
-    def __init__(self, file_path=None):
+    def __init__(self, file_path=None):  # type: ignore
         if file_path is None:
             base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             file_path = os.path.join(base_path, "config", "messages.json")

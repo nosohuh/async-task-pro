@@ -22,7 +22,7 @@ async def upload_pdf(file: UploadFile = File(...), prompt: str = None):  # type:
     print(prompt)
     if not prompt:
         prompt = message.get("pdf", "default_prompt")
-    file_path = os.path.join(UPLOAD_DIR, file.filename)
+        file_path = os.path.join(UPLOAD_DIR, file.filename)  # type: ignore
     with open(file_path, "wb") as f:
         content = await file.read()
         f.write(content)
@@ -80,7 +80,6 @@ async def continue_chat(file: UploadFile, user_input: str):
 async def end_chat(file: UploadFile):
     file_name = file.filename
     file_path = os.path.join(UPLOAD_DIR, file_name)
-    # Redis'ten sohbet geçmişini al
     chat_history = redis_connection.get(f"chat_history_{file_name}")
     chat_history = chat_history.decode("utf-8") if chat_history else ""
     if not chat_history:
